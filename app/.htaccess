@@ -1,0 +1,3 @@
+# .htaccess located in app folder
+# Makes the 'app' folder non accessible from browser (An attempt to navigate to the 'app' folder will return a 403 Forbidden http error rather than displaying the index).
+Options -Indexes

@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+# public/.htaccess
+  Options -Multiviews
+  RewriteEngine On
+  # Including this line will cause the rewrite to not work (404 error)
+  #RewriteBase /Forkify/smartrack/public
+  
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule  ^(.+)$ index.php?url=$1 [QSA,L]
+</IfModule>
