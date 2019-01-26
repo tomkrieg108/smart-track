@@ -74,6 +74,13 @@ class Goal {
     return ($this->db->execute());
   }
 
+  public function findGoalByTitle($goal) {
+    $this->db->query('SELECT * FROM goals WHERE title = :title');
+    $this->db->bind(':title', $goal->title);
+    $row = $this->db->single();
+    return ($this->db->rowCount() > 0);
+  }
+
   public function deleteGoal($goal_id) {
     $this->db->query('DELETE FROM goals WHERE goal_id = :goal_id' );
     $this->db->bind(':goal_id', $goal_id);

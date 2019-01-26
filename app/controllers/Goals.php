@@ -52,7 +52,9 @@ class Goals extends Controller {
 
       if(empty($goal->title)) {
         $errors->title = 'Please enter the title';
-      } 
+      } elseif ($this->goalModel->findGoalByTitle($goal)) {
+        $errors->title = 'This title is already being used.';
+      }
       if(empty($goal->body)) {
         $errors->body = 'Please enter the description';
       } 

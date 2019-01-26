@@ -11,13 +11,19 @@
 </div>
 <hr class="my-2 border border-primary">
 <?php foreach($data['goals'] as $goal ) : ?>
+  <?php $goal = new CGoal($goal)  ?>
   <div class="bg-light border border-success p-4 my-4">
-    <h4><?php echo $goal->title;  ?></h4>
-    <div>
-      <p class="lead"><?php echo $goal->body;  ?> Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto ducimus culpa incidunt ipsum. Nulla ducimus suscipit sapiente, consectetur numquam soluta iste praesentium temporibus illum atque, magni aspernatur! Autem, harum atque!</p>
+    <h5><?php echo $goal->title;  ?></h5>
+    <p><?php echo $goal->shortBody(50);  ?></p>
+    <p>Due date: <?php echo $goal->due_on ?>
+      <span class="<?php echo $goal->getDueClass();?>">
+        <?php echo $goal->daysUntilDue(); ?>
+      </span>
+    </p>
+    <!-- <p>Progress:</p> -->
+    <div class="progress mb-3">
+        <div class="<?php echo 'progress-bar ' . $goal->getProgressClass() ?>" style="<?php echo "width:" . $goal->getProgressStyle() . "%;"  ?>"><?php echo $goal->progress . "% complete" ?></div>
     </div>
-    <p>Due date: <?php echo $goal->due_on; ?> </p>
-    <p>Percent complete: <?php echo $goal->progress; ?> </p>
     <a href="<?php echo URLROOT . '/goals/show/' . $goal->goal_id; ?>" class="btn btn-dark">Details</a>
   </div>
 <?php endforeach;?>
