@@ -10,7 +10,8 @@
   define('APPROOT', dirname(__DIR__));
   
   //URL root
-  define('URLROOT', 'http://67.222.18.171/~tkrieg/Forkify/smartrack');
+  // define('URLROOT', 'http://67.222.18.171/~tkrieg/Forkify/smartrack');
+  define('URLROOT', 'https://tomkrieg.me/smartrack');
 
   //Site name
   define('SITENAME', 'SMARTrack');

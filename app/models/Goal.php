@@ -45,15 +45,14 @@ class Goal {
   }
 
   public function addGoal($goal) {
-    $this->db->query('INSERT INTO goals (title, user_id, body, progress, comments, due_on)
-                      VALUES(:title, :user_id, :body, :progress, :comments, :due)' 
+    $this->db->query('INSERT INTO goals (title, user_id, body, progress, due_on)
+                      VALUES(:title, :user_id, :body, :progress, :due)' 
                       );
     $this->db->bind(':title', $goal->title);
     $this->db->bind(':body', $goal->body);
     $this->db->bind(':due', $goal->due_on);
     $this->db->bind(':user_id', $goal->user_id);
     $this->db->bind(':progress', 0);
-    $this->db->bind(':comments', '');
     return ($this->db->execute());
   }
 
@@ -91,6 +90,13 @@ class Goal {
     $this->db->query('UPDATE goals SET completed_on = :completed_on WHERE goal_id = :goal_id' );
     $this->db->bind(':goal_id', $goal_id);
     $this->db->bind(':completed_on', $date);
+    return ($this->db->execute());
+  }
+
+  public function reopenGoal($goal_id) {
+    $this->db->query('UPDATE goals SET completed_on = :completed_on WHERE goal_id = :goal_id' );
+    $this->db->bind(':goal_id', $goal_id);
+    $this->db->bind(':completed_on', null);
     return ($this->db->execute());
   }
 

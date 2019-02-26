@@ -6,24 +6,24 @@ class Goals extends Controller {
       redirect('pages/index');
     }
     $this->goalModel = $this->model('Goal');
+    $this->taskModel = $this->model('Task');
+    $this->commentModel = $this->model('Comment');
     $this->userModel = $this->model('User');  //not used!
   }
 
-  public function index() {
+  public function index($type) {
     $user_id = $_SESSION['user_id'];
-    $goals = $this->goalModel->getGoals($user_id);
+    if($type == 'open') {
+      $goals = $this->goalModel->getGoals($user_id);
+    } else {
+      $goals = $this->goalModel->getCompletedGoals($user_id);
+    }
 
     $data = [
-      'goals' => $goals
+      'goals' => $goals,
+      'type' => $type
     ];
     $this->view('goals/index',$data);
-  }
-
-  public function completed() {
-    $data = [
-      'goals' =>$this->goalModel->getCompletedGoals($_SESSION['user_id'])
-    ];
-    $this->view('goals/completed',$data);
   }
 
   public function add() {
@@ -65,7 +65,7 @@ class Goals extends Controller {
       if(empty($errors->title) && empty($errors->body) && empty($errors->due_on)) {
         if($this->goalModel->addGoal($goal)) {
           flash('goal_message', 'New goal Added');
-          redirect('goals/index');
+          redirect('goals/index/open');
         } else {
           die('Something went wrong');
         }
@@ -183,10 +183,17 @@ class Goals extends Controller {
   }
 
   public function show($goal_id) {
+    //Get the goal object from the goal id
     $goal = $this->goalModel->getGoalById($goal_id);
+    //Get array of task objects associated with this goal id
+    $tasks = $this->taskModel->getTasks($goal_id);
+    //Get array of comment objects associated with this goal id
+    $comments = $this->commentModel->getComments($goal_id);
 
     $data = [
       'goal' => $goal,
+      'tasks' => $tasks,
+      'comments' => $comments,
     ];
 
     $this->view('goals/show', $data);
@@ -197,7 +204,7 @@ class Goals extends Controller {
 
       $goal = $this->goalModel->getGoalById($goal_id);
       if( $_SESSION['user_id'] != $goal->user_id ) {
-        redirect('goals/index');
+        redirect('goals/index/open');
       }
 
       $now = new DateTime();
@@ -205,12 +212,29 @@ class Goals extends Controller {
       $date = $now->format('Y-m-d'); // $now->format('Y-m-d H:i:s'); 
       if($this->goalModel->completeGoal($goal_id,$date)) {
         flash('goal_message', 'Goal has been completed');
-        redirect('goals/completed');
+        redirect('goals/show/' . $goal_id);
       } else {
         die('Something went wrong');
       }
     } else {
-      redirect('goals/index');
+      redirect('goals/index/open');
+    }
+  }
+
+  public function reopen($goal_id) {
+    if( $_SERVER['REQUEST_METHOD'] == POST) {
+      $goal = $this->goalModel->getGoalById($goal_id);
+      if( $_SESSION['user_id'] != $goal->user_id ) {
+        redirect('goals/index/open');
+      } 
+      if($this->goalModel->reopenGoal($goal_id)) {
+        flash('goal_message', 'Goal has been re-opened');
+        redirect('goals/show/' . $goal_id);
+      } else {
+        die('Something went wrong');
+      }
+    } else {
+      redirect('goals/index/open');
     }
   }
 
@@ -219,17 +243,17 @@ class Goals extends Controller {
 
       $goal = $this->goalModel->getGoalById($goal_id);
       if( $_SESSION['user_id'] != $goal->user_id ) {
-        redirect('goals/index');
+        redirect('goals/index/open');
       }
 
       if($this->goalModel->deleteGoal($goal_id)) {
         flash('goal_message', 'Goal has been deleted');
-        redirect('goals/index');
+        redirect('goals/index/closed');
       } else {
         die('Something went wrong');
       }
     } else {
-      redirect('goals/index');
+      redirect('goals/index/open');
     }
   }
 

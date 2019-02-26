@@ -10,7 +10,7 @@
      <!-- BOOTSTRAP -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
    <!-- CUSTOM STYLES -->
-  <link rel="stylesheet" href= <?php echo URLROOT . '/css/style.css' ?>  >
+  <link rel="stylesheet" href= <?php echo URLROOT . '/public/css/style.css' ?>  >
   <title><?php echo SITENAME ?></title>
 </head>
 <?php require APPROOT . '/views/include/navbar.php'; ?>
